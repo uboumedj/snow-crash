@@ -1,0 +1,25 @@
+As hinted in the introductory video, the password to connect to the flag00 account
+is hidden in a file that can only be ran by the flag00 account.
+
+Conveniently, a command exists for that:
+
+	find /usr -user flag00
+
+The result shows only one file: 
+
+	/usr/bin/john
+
+When CATing this file, we obtain a string:
+
+	cdiiddwpgswtgt
+
+This string doesn't work as a password for flag00. Conveniently (again), another hint
+can be found in the introductory video. In the advised tools to complete the project,
+the website dcode.fr is mentioned, which automatically decrypts simple encryptions like
+the Caesar Cipher.
+When trying to decrypt the previous string with their Caesar Cipher decrypting tool,
+we get the following string:
+
+	nottoohardhere
+
+Which makes more sense, and magically works as the password for the flag00 account.
