@@ -23,3 +23,6 @@ we get the following string:
 	nottoohardhere
 
 Which makes more sense, and magically works as the password for the flag00 account.
+Using the getflag command on flag00, we get the flag for this level:
+
+	x24ti5gi3x0ol2eh4esiuxias
