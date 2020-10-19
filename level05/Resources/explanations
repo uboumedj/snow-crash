@@ -1,0 +1,57 @@
+ls -la doesn't give any result on this level. Is there a file somewhere that I can use?
+
+	find / -user level05
+
+gives way too many results, most of which are permission errors.
+
+	find / -user level05 2>&-
+
+prevents errors from being displayed, but there's still too many results. Most results
+seem to come from /proc, and a quick search tells me I won't find anything useful there.
+
+	find / -user level05 2>&- | grep -v proc
+
+gives me nothing. Let's see if I can find something useful if I search flag05 instead,
+like the previous levels.
+
+	find / -user flag05 2>&- | grep -v proc
+
+gives me two files:
+
+	/usr/sbin/openarenaserver
+	/rofs/usr/sbin/openarenaserver
+
+Here are the permissions from these files:
+
+	-rwxr-x---+ 1 flag05 flag05 94 Mar  5  2016 /usr/sbin/openarenaserver
+	-rwxr-x---  1 flag05 flag05 94 Mar  5  2016 /rofs/usr/sbin/openarenaserver
+
+The first file has a little + behind its normal permissions. It means there are extended
+permissions on that file. Using getfacl, I can see that level05 has reading permissions on
+that file, and indeed, I can cat it without an issue, whereas trying to cat the second file
+gives me an error.
+
+	#!/bin/sh
+
+	for i in /opt/openarenaserver/* ; do
+        (ulimit -t 5; bash -x "$i")
+        rm -f "$i"
+	done
+
+The program is quite simple: it seems to execute every file in the /opt/openarenaserver directory
+before deleting it.
+
+	echo "getflag" > /opt/openarenaserver/test.sh
+
+Now there's a file called test.sh in that directory which will simply run getflag. But I don't
+have the rights to use the program, as I'm not flag05!
+As I was pondering over how to make this work, I did an ls /opt/openarenaserver to find my script and
+it was gone! That probably means openarenaserver automatically executes, maybe regularly.
+I can't start the program myself, so I won't see its output. I need to have the program write it somewhere
+else.
+
+	echo "getflag > /tmp/answer" > /opt/openarenaserver/test.sh
+
+After waiting for about a minute, I do a simple cat /tmp/answer:
+
+	viuaaale9huek52boumoomioc
