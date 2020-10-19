@@ -17,7 +17,7 @@ the password's hash type. I downloaded it from its official website:
 But first, we must get the passwd file out of the system. As we can connect to it by ssh,
 it's fairly simple with the scp command:
 
-	scp -P 4242 level01@192.168.1.17:/etc/passwd .
+	scp -P 4242 level01@192.168.0.37:/etc/passwd .
 
 The command pulls the password file into the current directory. We can then run john
 very simply:

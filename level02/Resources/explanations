@@ -1,0 +1,28 @@
+Doing a ls command in the level02 user directory displays one file!
+
+	level02.pcap
+
+A simple research tells me it's a packet capture file, that I can open and analyse
+with a network protocal analyser. I chose and installed Wireshark (the subject
+advises cloudshark but it seemed less user-friendly)
+
+First, I have to get the file with the exact same method as the one I used on level01
+for the /etc/passwd file.
+
+	scp -P 4242 level01@192.168.0.37:/home/user/level02/level02.pcap .
+
+Now that I have the file, I can open it with Wireshark and analyse the TCP stream.
+One of the lines seems interesting:
+
+	Password: ft_wandr...NDRel.L0L
+
+The password with the dots doesn't seem to work! Luckily enough, it doesn't take me long
+to guess that the points mean the delete button was pressed. Following this logic,
+the password I end up getting is:
+
+	ft_waNDReL0L
+
+Which takes me to the flag02 account, where I use getflag to obtain the next level's
+password:
+
+	kooda2puivaav1idi4f57q8iq

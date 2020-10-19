@@ -1,0 +1,52 @@
+Doing a ls command in the level03 user directory displays one file!
+
+	level03
+
+Cat-ing the file displays a bunch of gibberish along with some code; and the file seems
+to be an executable. Executing it displays two words:
+
+	Exploit me
+
+We can then use gdb (GNU Debugger, advised by the subject) to analyse the binary.
+After reading a tutorial on how to use gdb, I come up with a plan:
+
+	gdb level03
+
+Now that gdb is launched on the program, I can use
+
+	disas main
+
+Disas means disassemble, and basically returns each ASM instruction from the function.
+The last lines seem to be interesting:
+
+	0x080484f7 <+83>:    movl   $0x80485e0,(%esp)
+	0x080484fe <+90>:    call   0x80483b0 <system@plt>
+
+We can see that a system call is made at the end. What is it? Fortunately, gdb provides handy 
+tools for that. x/s converts the data at the given address to a string. So, taking the
+data at 0x80485e0, which is the address right before the system call, we get:
+
+	0x80485e0:       "/usr/bin/env echo Exploit me"
+
+A close look at how the system call is made tells me how I can exploit it: it is possible to
+divert the env's path to another directory of my choosing, then create a fake echo program
+inside that directory and the level03 program will simply execute what I want.
+
+What I'm supposed to make it execute confused me for a moment, before I did a ls -l and
+realised that level03 was executed with flag03's permissions. Which means I could probably
+simply make it do a getflag.
+
+First, let's create the fake echo file.
+
+	echo "/bin/sh -c 'getflag'" > /tmp/echo
+	chmod 755 /tmp/echo
+
+Now there's a fake echo file in the tmp directory that calls getflag, and has executing rights.
+Next, I'll have to add /tmp to the env's PATH:
+
+	export PATH=/tmp:$PATH
+
+Now /tmp/echo will be found before the real echo, and will be executed. Finally, ./level03
+gives me the flag for this level:
+
+	qi0maab88jeaj46qoumi7maus
