@@ -1,0 +1,13 @@
+ls shows us a single binary, level07. When executed, it simply outputs "level07".
+Let's try gdb like what we did a few levels earlier.
+
+When digging in the disassembled code, I manage to understand that the binary simply
+echoes the LOGNAME variable from the environment.
+I check the environment, and indeed, we have a LOGNAME="level07" line.
+Let's change that to something more suitable to us.
+
+	export LOGNAME="; getflag"
+
+level07 now magically shows us the flag:
+
+	fiumuikeil55xe9cu4dood66h

@@ -1,0 +1,23 @@
+There are two files in the current directory, level06 and level06.php. The first file
+seems to execute the second, which is a php script.
+
+After a thorough look through the script and research on the main function used (preg_replace),
+I understand what I will have to do.
+
+preg_replace looks for a REGEX pattern within a source string, and replaces the pattern's
+occurences with another. The patterns can admit multiple options, one of those is "e", which
+evaluates the string to be substituted as php code before replacing. That option is now obsolete,
+as it could be used to execute any php code, which is a huge security flaw.
+Conveniently, that "e" option is used in our script.
+
+
+So we simply have to create a file with a string which matches the first part of the REGEX pattern,
+and we'll then be able to make the script execute anything after (for example: getflag!)
+
+	echo '[x {${exec(getflag)}}]' > /tmp/test
+
+Now that we have the file, a simple ./level06 /tmp/test gives us the answer we're
+looking for along with a nice error message:
+
+	PHP Notice:  Use of undefined constant getflag - assumed 'getflag' in /home/user/level06/level06.php(4) : regexp code on line 1
+	PHP Notice:  Undefined variable: Check flag.Here is your token : wiok45aaoguiboiki2tuin6ub in /home/user/level06/level06.php(4) : regexp code on line 1
