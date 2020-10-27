@@ -1,0 +1,39 @@
+There are two files in our directory: "level08", which seems to be a binary that we
+can execute, and "token".
+Executing level08 without any argument gives us the usage:
+
+	./level08 [file to read]
+
+Attempting to read the token results in an error message:
+
+	You may not access token.
+
+This is not the standard "no permissions" error message from the shell, let's try to
+take a look inside the binary's code with gdb.
+The disassembled main contains a few lines that seem relevant here:
+
+   0x080485af <+91>:    movl   $0x8048793,0x4(%esp)
+   0x080485b7 <+99>:    mov    %eax,(%esp)
+   0x080485ba <+102>:   call   0x8048400 <strstr@plt>
+
+strstr is called (string comparison). Let's try to see what it's trying to compare:
+
+	(gdb) x/s 0x8048793
+	0x8048793:       "token"
+
+So it seems that the program simply tries to compare its arguments name with "token".
+If its name is "token", it won't be opened and an error message will be shown.
+
+Copying/renaming token to something else doesn't work, since we don't have access rights.
+We can, however, try to make a symbolic link.
+
+	ln -s /home/user/level08/token /tmp/gotcha
+
+Now ./level08 /tmp/gotcha actually works and gives us the content of the file, which
+this time turns out to be flag08's password:
+
+	quif5eloekouj29ke0vouxean
+
+A simple getflag gives us the level's flag:
+
+	

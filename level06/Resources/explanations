@@ -10,7 +10,6 @@ evaluates the string to be substituted as php code before replacing. That option
 as it could be used to execute any php code, which is a huge security flaw.
 Conveniently, that "e" option is used in our script.
 
-
 So we simply have to create a file with a string which matches the first part of the REGEX pattern,
 and we'll then be able to make the script execute anything after (for example: getflag!)
 
