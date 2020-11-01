@@ -1,0 +1,35 @@
+Two files in the current directory: level09 and token. level09 is a binary that
+takes an argument and seemingly outputs some gibberish; and token contains a character
+string.
+
+As it is, the character string inside token doesn't work as a password (it contains
+weird symbols anyway)! Using level09 on its contents makes it even weirder.
+The binary seems to be performing some kind of encryption on its argument. It doesn't
+take me long to understand its nature.
+
+	./level09 token
+	tpmhr
+	./level09 1111
+	1234
+	./level09 aaaaaa
+	abcdef
+
+It seems to shift each character by its index in the string. I can only assume that the
+token has been "encrypted" with this method. Reversing it is super easy.
+
+I create a small python script with vim, in /tmp/script.py
+
+import sys
+
+for i, char in enumerate(sys.argv[1]):
+        sys.stdout.write(chr(ord(char) - i))
+sys.stdout.write("\n")
+
+Running the script on the token's contents gives me flag09's password.
+
+	python /tmp/script.py $(cat token)
+	f3iji1ju5yuevaus41q1afiuq
+
+Now that I'm inside flag09, a simple getflag will give me the answer I'm looking for:
+
+	s5cAJpM8ev6XHw998pRWG728z
