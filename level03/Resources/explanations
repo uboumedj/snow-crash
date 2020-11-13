@@ -1,18 +1,12 @@
-Doing a ls command in the level03 user directory displays one file!
-
-	level03
-
+Doing a ls command in the level03 user directory displays one file: level03.
 Cat-ing the file displays a bunch of gibberish along with some code; and the file seems
 to be an executable. Executing it displays two words:
 
 	Exploit me
 
 We can then use gdb (GNU Debugger, advised by the subject) to analyse the binary.
-After reading a tutorial on how to use gdb, I come up with a plan:
-
-	gdb level03
-
-Now that gdb is launched on the program, I can use
+After reading a tutorial on how to use gdb, I come up with a plan: using gdb on the program.
+After launching gdb, I use:
 
 	disas main
 

