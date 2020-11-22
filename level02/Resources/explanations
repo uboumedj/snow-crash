@@ -3,7 +3,7 @@ Doing a ls command in the level02 user directory displays one file!
 	level02.pcap
 
 A simple research tells me it's a packet capture file, that I can open and analyse
-with a network protocal analyser. I chose and installed Wireshark (the subject
+with a network protocol analyser. I chose and installed Wireshark (the subject
 advises cloudshark but it seemed less user-friendly)
 
 First, I have to get the file with the exact same method as the one I used on level01

@@ -1,0 +1,24 @@
+There is one file in the directory: level11.lua, which is a lua script file.
+It seems to run a server on the 5151 port of localhost. Testing it with netcat:
+
+	nc localhost 5151
+
+it's waiting for a password. Let's take a closer look at the script's code!
+It seems to wait for the password for a minute; when it gets the password it hashes it
+with sha1sum, then compares the result with a string (the hashed version of the expected password I guess).
+Whether it matches or not doesn't actually matter, in both cases it just outputs a message
+("Erf nope.." if it's the wrong one, "Gz you dumb" if it's correct).
+
+The interesting part seems to reside in the hashing part of the code. It uses the io.popen
+function, which basically executes its argument as a program. Here it executes the command
+'echo "..pass.." | sha1sum', so basically it echoes the user's input and pipes the output
+to the hashing program.
+With the way it's called, I can simply inject any command I want by simply escaping the echo
+with a ";". Let's try that:
+
+	; getflag > /tmp/token
+
+The program obviously doesn't accept the password and tells me "Erf nope...", but as I expected,
+I can now find the token inside /tmp/token:
+
+	fa6v5ateaw21peobuub8ipe6s

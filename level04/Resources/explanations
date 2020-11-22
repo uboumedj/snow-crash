@@ -24,7 +24,7 @@ displays "test", just as expected.
 After some research, I come up with a way to make it echo what I want: we can run getflag
 in a subshell, and pass it as the x parameter!
 
-	curl "192.168.0.37:4747?x=$(getflag)"
+	curl '192.168.0.37:4747?x=$(getflag)'
 
 The program must first determine what getflag outputs - since level04.pl is launched as
 flag04, getflag will also have the correct rights. Then the perl scriptt will simply
